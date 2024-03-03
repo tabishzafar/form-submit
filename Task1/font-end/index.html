@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+
+</head>
+
+<style>
+    body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: darkslategray;
+    }
+
+    h1 {
+        text-align: center;
+        color: lightblue;
+    }
+
+    .one {
+        max-width: 375px;
+        margin: 18px auto;
+        padding: 11px;
+        border: 1px solid darkblue;
+        border-radius: 14px;
+        background-color: lightslategray;
+    }
+
+    .one form {
+        /* padding-left: 20px; */
+        display: flex;
+        flex-direction: column;
+        /* gap: 20px;
+    }
+
+    label {
+        display: block;
+        /* Ensure labels are above inputs */
+        margin-bottom: 5px;
+    }
+
+    label {
+        color: honeydew;
+        padding-bottom: 2px;
+        font-weight: 800;
+    }
+
+    input {
+        width: 87%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    button {
+        background-color: #a22509;
+        color: lightcyan;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 22%;
+        margin: auto;
+        font-weight: 600;
+    }
+
+    button:hover {
+        background-color: #46a049;
+        
+    }
+
+    #myForm small {
+        color: sandybrown;
+        font-size: 11px;
+        margin-top: 4px;
+    }
+</style>
+
+<body>
+    <h1>Registration Form</h1>
+    <div class="one">
+        <form id="myForm">
+
+            <label for="fname">First Name:-</label> <input type="text" id="fname" name="FIRST_NAME" required><br>
+            <label for="lname">Last Name:-</label> <input type="text" id="lname" name="LAST_NAME" required><br>
+            <label for="number">Mobile_No:-</label> <input type="number" id="number1" name="CONTACT"
+                title="must be a 10 number" required><br>
+            <label for="number">Age:-</label> <input type="number" id="age1" name="AGE" required><br>
+            <label for="email">Email_ID:-</label> <input type="email" id="email" name="EMAIL" required><br>
+            <label style="text-align: center; color: brown; font-size: 19px;">---Address---</label><br>
+            <label for="city">City:-</label> <input type="text" id="city" name="CITY" required><br>
+            <label for="state">State:-</label> <input type="text" id="state" name="STATE" required><br>
+            <label for="country">Country:-</label> <input type="text" id="country" name="COUNTRY" required><br>
+            <label style="text-align: center; color: brown; font-size: 19px;">---User-details---</label><br>
+            <label for="Login Id ">Login_ID:-</label> <input type="text" id="Login" name="LOGIN" required><br>
+            <label for="Password">Password:-</label> <input type="text" id="password1" name="PASSWORD"
+                pattern="(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}"
+                title="Password must be at least 8 characters long and contain at least one digit, one special character, and one letter."
+                required>
+            <small>Password must be at least 8 characters long and contain at least one digit, one special character,
+                and one letter.</small><br>
+            <button onclick="checkpass(event)">Submit</button>
+
+
+
+        </form>
+    </div>
+
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    async function checkpass(event) {
+        //  window.confirm("");
+        event.preventDefault();
+        const password = document.getElementById("password1").value;
+        const cno = document.getElementById("number1").value;
+        console.log(cno.length)
+        if (cno.length != 10) {
+            alert('INVALID MOBILE NUMBER');
+            event.preventDefault();
+        } else if (!/(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}/.test(password)) {
+            alert('INVALID PASSWORD \nPassword must be at least 8 characters long and contain at least one digit, one special character, and one letter.');
+            event.preventDefault();
+        } else {
+            postdata(event);
+        }
+
+//         const response = await fetch("http://localhost:4000/form-data", {
+//     method: "POST", // *GET, POST, PUT, DELETE, etc.
+//     mode: "cors", // no-cors, *cors, same-origin
+//     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+//     credentials: "same-origin", // include, *same-origin, omit
+//     headers: {
+//       "Content-Type": "application/json",
+//       // 'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     redirect: "follow", // manual, *follow, error
+//     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+//     body: JSON.stringify(data), // body data type must match "Content-Type" header
+//   });
+//   return response.json();
+
+
+
+    }
+
+
+    function postdata(event) {
+        const formData = new FormData(document.getElementById("myForm"));
+        console.log("FormData:", formData);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:4000/form-data", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log("Response status:", xhr.status);
+                console.log("Response text:", xhr.responseText);
+            }
+        };
+        console.log(formData)
+        xhr.send(JSON.stringify(Object.fromEntries(formData)));
+        // location.reload();
+
+//         const response = fetch("http://localhost:4000/form-data", {
+//     method: "POST", // *GET, POST, PUT, DELETE, etc.
+//     mode: "cors", // no-cors, *cors, same-origin
+//     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+//     credentials: "same-origin", // include, *same-origin, omit
+//     headers: {
+//       "Content-Type": "application/json",
+//       // 'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     redirect: "follow", // manual, *follow, error
+//     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+//     body: JSON.stringify(data), // body data type must match "Content-Type" header
+//   });
+//   return response.json();
+
+
+
+
+    }
+</script>
+
+
+
+</html>

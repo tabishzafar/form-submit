@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+    <style>
+        body {
+            background-color: #b3dfb4;
+        }
+
+        h1 {
+            text-align: center;
+            color: darkblue;
+            letter-spacing: 1px;
+        }
+
+        #one {
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px dashed #7b7777;
+            border-radius: 5px;
+            background: teal;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+           
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            color: floralwhite;
+            font-size: 20px;
+            margin: 0px 0px 2px 19px;
+        }
+
+        input {
+            padding: 5px;
+            border-radius: 3px;
+            border: none;
+            color: darkblue;
+        }
+
+        button:hover {
+            background-color: #46a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Login Page</h1>
+    <div id="one">
+        <form id="loginForm">
+            <label for="id">Login_Id:-</label>
+            <input type="text" id="id" name="id" required><br><br>
+
+            <label for="password">Password:-</label>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <div id="response">
+
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const id = document.getElementById("id").value;
+            const password = document.getElementById("password").value;
+
+            const data = {
+                id: id,
+                password: password
+            };
+
+            fetch("/login-page", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(json => {
+                    const responseDiv = document.getElementById("response");
+                    responseDiv.innerHTML = "<pre>" + JSON.stringify(json, null, 2) + "</pre>";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
+    </script>
+</body>
+
+</html>
